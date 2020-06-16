@@ -15,9 +15,9 @@ module.exports = {
             { name: '변경 후 메세지', value: newMessage, inline: true}
         )
         .setTimestamp()
-        .setFooter('by 라라라#6343')
+        .setFooter('by 라라라#6343');
 
-        logChannel.send(editEmbed)
+        return logChannel.send(editEmbed)
     },
 
     messageDeleteEvent: function(deletedMessage) {
@@ -35,6 +35,29 @@ module.exports = {
         .setTimestamp()
         .setFooter('by 라라라#6343');
 
-        logChannel.send(deleteEmbed);
+        return logChannel.send(deleteEmbed);
+    },
+
+    guildMemberNicknameUpdateEvent: (oldMember, newMember) => {
+        if(newMember.nickname === null) newMember.nickname = newMember.user.username;
+        const guild = oldMember.guild;
+        const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그')
+        const nicknameUpdateEmbed = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('BBAGUI LOGGER')
+        .setDescription('NICKNAME UPDATE')
+        .addFields(
+            { name: '멤버', value: `${oldMember.user.username}#${oldMember.user.discriminator}`},
+            { name: '변경 전 닉네임', value: oldMember.nickname},
+            { name: '변경 후 닉네임', value: newMember.nickname }
+        )
+        .setTimestamp()
+        .setFooter('by 라라라#6343');
+
+        return logChannel.send(nicknameUpdateEmbed);
+    },
+
+    guildMemberAdd: (member) => {
+        console.log(member);
     }
 }

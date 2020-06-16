@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 const logger = require('./res/logger');
+const getQna = require('./res/getQna')
 
 client.on('ready',() => {
     console.log('BBAGUI IS READY!');
@@ -17,36 +18,28 @@ client.on('messageDelete', (deletedMessage) => {
     logger.messageDeleteEvent(deletedMessage);
 })
 
-try {
-    client.on('message', message => {
-        if(!message.content.startsWith('빠귀야')) return;
-        let args = message.content.split(' ').splice(1);
-        let command = args.shift();
-        async function init() {
-            const sheet = require('./res/getSheet');
-            let result = await sheet('1LYyhpqHlc8IUNEgCxnjBmJEWfJIG3qzn-QAKry8FYJE', null);
-            result = result["table"].rows.slice(1)
-            var DB = {};
-            for (let i=0;i<result.length;i++) {
-                    let Q = result[i]["c"][0]["v"];
-                    let A = result[i]["c"][1]["v"]
-                    DB[Q] = A;
-                }
-                DB = JSON.stringify(DB)
-                DB = JSON.parse(DB);
-                if (DB[command]) {
-                    message.channel.send(DB[command])
-                } else {
-                    message.channel.send('그런 말은 몰라요!')
-                }
-            }
-            
-            init()
-        
-    });
-} catch(err) {
-    throw err;
-}
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+    if (oldMember.nickname !== newMember.nickname) {
+        return logger.guildMemberNicknameUpdateEvent(oldMember, newMember);
+    }
+})
+
+client.on('guildMemberAdd', (member) => {
+    return logger.guildMemberAdd(member);
+})
+client.on('message', message => {
+    if(!message.content.startsWith('빠귀야')) return;
+    let args = message.content.split(' ').splice(1);
+    let command = args.shift();
+    DB = getQna.run();
+    DB = JSON.stringify(DB)
+    DB = JSON.parse(DB);
+    if (DB[command]) {
+        message.channel.send(DB[command])
+    } else {
+        message.channel.send('그런 말은 몰라요!')
+    }
+});
 
 
 

@@ -9,6 +9,8 @@
   "author": "lalala",
   "license": "ISC",
   "dependencies": {
-    "discord": "^0.8.2"
+    "discord": "^0.8.2",
+    "yt-search": "^1.1.2",
+    "ytdl-core": "^2.1.7"
   }
 }
