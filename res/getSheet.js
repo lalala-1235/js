@@ -1,6 +1,6 @@
 const http = require('https');
 
-module.exports = (key, query = null) => new Promise((resolve, reject) => {
+module.exports = (key, query = null) => new Promise((res, rej) => {
     var options = {
       host: 'docs.google.com',
       path: `/spreadsheets/d/${key}/gviz/tq?`
@@ -15,7 +15,10 @@ module.exports = (key, query = null) => new Promise((resolve, reject) => {
         });
 
         response.on('end', function () {
-            resolve(JSON.parse(str.slice(47, -2)));
+            res(JSON.parse(str.slice(47, -2)))
         });
-    }).end();
-});
+    }).end()
+    
+})
+
+//이건 구글 시트에서 대화 불러오는 코드

@@ -20,7 +20,7 @@ module.exports = {
         return logChannel.send(editEmbed)
     },
 
-    messageDeleteEvent: function(deletedMessage) {
+    messageDeleteEvent: (deletedMessage) => {
         const guild = deletedMessage.member.guild;
         const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그')
 
@@ -58,6 +58,72 @@ module.exports = {
     },
 
     guildMemberAdd: (member) => {
+        const guild = member.guild; //유저가 있는 서버를 뽑아냄
+        const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그') //유저가 있는 서버에서 채널 설명이 '빠귀로그' 라고 되어있는 데를 뽑아냄
+        const addEmbed = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('BBAGUI LOGGER')
+        .setDescription('MEMBER JOIN')
+        .addFields(
+            { name: '멤버', value: `${member.user.username}#${member.user.discriminator}`}
+        )
+        .setTimestamp()
+        .setFooter('by 라라라#6343');
         console.log(member);
-    }
-}
+        return logChannel.send(addEmbed);
+    },
+
+    guildMemberRemove: (member) => {
+        const guild = member.guild; 
+        const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그')
+        const removeEmbed = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('BBAGUI LOGGER')
+        .setDescription('MEMBER LEFT')
+        .addFields(
+            { name: '멤버', value: `${member.user.username}#${member.user.discriminator}`},
+        )
+        .setTimestamp()
+        .setFooter('by 라라라#6343');
+        return logChannel.send(removeEmbed);
+    },
+
+    guildMemberRoleUpdate: (oldMember, newMember) => {
+        const guild = oldMember.guild; //서버 데이터
+        const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그'); //로그할 채널
+        const oldMemberRoles = oldMember._roles.toString(); // 역할 정보
+        const newMemberRoles = newMember._roles.toString(); // 새로운 역할 정보
+        if (oldMemberRoles.length > newMemberRoles.length) { // 이전 역할 정보 > 새로운 역할정보라면
+            let removedrole = oldMemberRoles.replace(newMemberRoles, ""); //역할이 빠진 것이므로 이전 역할정보에서 새로운 역할 정보를 제거
+            removedrole = removedrole.replace(',', '');
+            let role = guild.roles.cache.get(removedrole); // 역할 정보를 id로 가져옴
+            const removeRoleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('BBAGUI LOGGER')
+            .setDescription('MEMBER ROLE REMOVE')
+            .addFields(
+                { name: '멤버', value: `${oldMember.user.username}#${oldMember.user.discriminator}`},
+                { name: '삭제된 역할', value: `${role}`}
+            )
+            .setTimestamp()
+            .setFooter('by 라라라#6343'); //임베드
+            return logChannel.send(removeRoleEmbed);
+        } else if(oldMemberRoles.length < newMemberRoles.length) {
+            const logChannel = guild.channels.cache.find(channel => channel.topic === '빠귀로그')
+            let addedRole = newMemberRoles.replace(oldMemberRoles, "");
+            addedRole = addedRole.replace(",","");
+            let role = guild.roles.cache.get(addedRole);
+            const addedRoleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('BBAGUI LOGGER')
+            .setDescription('MEMBER ROLE ADD')
+            .addFields(
+                { name: '멤버', value: `${oldMember.user.username}#${oldMember.user.discriminator}`},
+                { name: '추가된 역할', value: `${role}`}
+            )
+            .setTimestamp()
+            .setFooter('by 라라라#6343')           
+            return logChannel.send(addedRoleEmbed);
+        } //이런 식으로
+    }, //건우도 권한 받으면 데이터베이스 편집 가능
+} // 이것들은 로거 기능
