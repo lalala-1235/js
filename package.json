@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "discord": "^0.8.2",
+    "mongoose": "^5.9.19",
     "yt-search": "^1.1.2",
     "ytdl-core": "^2.1.7"
   }
