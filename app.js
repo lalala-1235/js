@@ -11,31 +11,31 @@ client.on("ready", () => {
   console.log("BBAGUI IS READY!");
 }); // 이게 봇이 시작되었을 때 실행됨
 
-client.on("messageUpdate", (oldMessage, newMessage) => {
-  if (oldMessage.author.bot || newMessage.author.bot) return;
-  logger.messageEditEvent(oldMessage, newMessage);
-}); // 이건 메세지가 수정되었을 때 실행됨
+// client.on("messageUpdate", (oldMessage, newMessage) => {
+//   if (oldMessage.author.bot || newMessage.author.bot) return;
+//   logger.messageEditEvent(oldMessage, newMessage);
+// }); // 이건 메세지가 수정되었을 때 실행됨
 
-client.on("messageDelete", (deletedMessage) => {
-  if (deletedMessage.author.bot) return;
-  logger.messageDeleteEvent(deletedMessage);
-}); // 이건 메세지가 삭제되었을 때 실행됨
+// client.on("messageDelete", (deletedMessage) => {
+//   if (deletedMessage.author.bot) return;
+//   logger.messageDeleteEvent(deletedMessage);
+// }); // 이건 메세지가 삭제되었을 때 실행됨
 
-client.on("guildMemberUpdate", (oldMember, newMember) => {
-  if (oldMember.nickname !== newMember.nickname) {
-    return logger.guildMemberNicknameUpdateEvent(oldMember, newMember);
-  } else if (oldMember._roles !== newMember._roles) {
-    return logger.guildMemberRoleUpdate(oldMember, newMember);
-  }
-}); //이건 멤버가 업데이트되었을 때 실행됨
+// client.on("guildMemberUpdate", (oldMember, newMember) => {
+//   if (oldMember.nickname !== newMember.nickname) {
+//     return logger.guildMemberNicknameUpdateEvent(oldMember, newMember);
+//   } else if (oldMember._roles !== newMember._roles) {
+//     return logger.guildMemberRoleUpdate(oldMember, newMember);
+//   }
+// }); //이건 멤버가 업데이트되었을 때 실행됨
 
-client.on("guildMemberAdd", (member) => {
-  return logger.guildMemberAdd(member);
-}); //이건 멤버가 추가되었을 때 실행됨
+// client.on("guildMemberAdd", (member) => {
+//   return logger.guildMemberAdd(member);
+// }); //이건 멤버가 추가되었을 때 실행됨
 
-client.on("guildMemberRemove", (member) => {
-  return logger.guildMemberRemove(member);
-});
+// client.on("guildMemberRemove", (member) => {
+//   return logger.guildMemberRemove(member);
+// });
 
 client.on("message", async (message) => {
   if (!message.content.startsWith("빠귀야")) return;
